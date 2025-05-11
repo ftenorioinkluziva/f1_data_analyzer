@@ -100,7 +100,7 @@ async def process_topic(http_session, session_url, topic, race_name, session_nam
     
     # Criar diretórios para os dados brutos e processados
     raw_topic_dir = RAW_DIR / race_name / session_name
-    processed_topic_dir = PROCESSED_DIR / race_name / session_name / topic.replace('.', '_')
+    processed_topic_dir = PROCESSED_DIR / race_name / session_name / topic
     
     raw_topic_dir.mkdir(exist_ok=True, parents=True)
     processed_topic_dir.mkdir(exist_ok=True, parents=True)
@@ -172,11 +172,6 @@ async def process_topic(http_session, session_url, topic, race_name, session_nam
                 "generated_at": datetime.now().isoformat()
             }
             json.dump(metadata, f, indent=2)
-        
-        # Salvar um resumo (primeiros 10 registros)
-        summary_file = processed_topic_dir / f"{topic}_summary.json"
-        with open(summary_file, 'w', encoding='utf-8') as f:
-            json.dump(processed_data[:10], f, default=json_serializable, indent=2)
         
         print(f"  Dados processados para {topic}: {len(processed_data)} registros")
         
@@ -372,7 +367,7 @@ async def main(meeting_key=None, session_key=None, list_all=False):
         print("\nColeta concluída!")
         print(f"Dados brutos salvos em: {RAW_DIR.absolute()}")
         print(f"Dados processados salvos em: {PROCESSED_DIR.absolute()}")
-        print("\nVocê pode começar sua análise verificando os arquivos *_summary.json ou os arquivos CSV gerados.")
+        print("\nVocê pode começar sua análise verificando os arquivos _metadata.json ou os arquivos CSV gerados.")
         return
     
     # Processar uma única sessão usando as chaves fornecidas
@@ -382,7 +377,7 @@ async def main(meeting_key=None, session_key=None, list_all=False):
     print("\nColeta concluída!")
     print(f"Dados brutos salvos em: {RAW_DIR.absolute()}")
     print(f"Dados processados salvos em: {PROCESSED_DIR.absolute()}")
-    print("\nVocê pode começar sua análise verificando os arquivos *_summary.json ou os arquivos CSV gerados.")
+    print("\nVocê pode começar sua análise verificando os arquivos _metadata.json ou os arquivos CSV gerados.")
 
 if __name__ == "__main__":
     # Configurar argumentos da linha de comando
