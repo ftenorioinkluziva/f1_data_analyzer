@@ -1,0 +1,11 @@
+﻿00:14:15.274{"Messages":[{"Utc":"2025-05-02T16:30:00","Category":"Flag","Flag":"GREEN","Scope":"Track","Message":"GREEN LIGHT - PIT EXIT OPEN"}]}
+00:20:19.217{"Messages":{"1":{"Utc":"2025-05-02T16:36:04","Category":"Other","Message":"INCIDENT INVOLVING CAR 4 (NOR) NOTED - UNSAFE CONDITION"}}}
+00:21:40.414{"Messages":{"2":{"Utc":"2025-05-02T16:37:25","Category":"Other","Message":"FIA STEWARDS: INCIDENT INVOLVING CAR 4 (NOR) WILL BE INVESTIGATED AFTER THE SESSION - UNSAFE CONDITION"}}}
+00:50:50.334{"Messages":{"3":{"Utc":"2025-05-02T17:06:35","Category":"Other","Message":"TURN 17 INCIDENT INVOLVING CARS 31 (OCO) AND 4 (NOR) NOTED - IMPEDING"}}}
+00:51:51.075{"Messages":{"4":{"Utc":"2025-05-02T17:07:36","Category":"Other","Message":"FIA STEWARDS: TURN 17 INCIDENT INVOLVING CARS 31 (OCO) AND 4 (NOR) WILL BE INVESTIGATED AFTER THE SESSION - IMPEDING"}}}
+01:05:26.555{"Messages":{"5":{"Utc":"2025-05-02T17:21:11","Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":7,"Message":"DOUBLE YELLOW IN TRACK SECTOR 7"}}}
+01:05:29.565{"Messages":{"6":{"Utc":"2025-05-02T17:21:14","Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":7,"Message":"CLEAR IN TRACK SECTOR 7"}}}
+01:09:35.385{"Messages":{"7":{"Utc":"2025-05-02T17:25:20","Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":13,"Message":"DOUBLE YELLOW IN TRACK SECTOR 13"}}}
+01:09:42.789{"Messages":{"8":{"Utc":"2025-05-02T17:25:28","Category":"Flag","Flag":"RED","Scope":"Track","Message":"RED FLAG"}}}
+01:09:42.877{"Messages":{"9":{"Utc":"2025-05-02T17:25:28","Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":13,"Message":"CLEAR IN TRACK SECTOR 13"}}}
+01:20:02.046{"Messages":{"10":{"Utc":"2025-05-02T17:35:47","Category":"Flag","Flag":"CLEAR","Scope":"Track","Message":"TRACK CLEAR"}}}

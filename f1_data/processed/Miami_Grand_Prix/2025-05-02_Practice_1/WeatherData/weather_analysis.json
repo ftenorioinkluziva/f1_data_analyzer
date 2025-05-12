@@ -1,0 +1,32 @@
+{
+  "air_temp_stats": {
+    "min": 27.1,
+    "max": 29.1,
+    "avg": 27.873076923076926,
+    "std": 0.5644611444700013
+  },
+  "track_temp_stats": {
+    "min": 37.1,
+    "max": 49.9,
+    "avg": 41.64358974358975,
+    "std": 3.8171040135530823
+  },
+  "humidity_stats": {
+    "min": 45.0,
+    "max": 54.0,
+    "avg": 50.217948717948715,
+    "std": 2.029953846941506
+  },
+  "significant_changes": [],
+  "rain_detected": false,
+  "wind_stats": {
+    "max_speed": 5.8,
+    "avg_speed": 1.8525641025641026,
+    "dominant_direction": 99.0
+  },
+  "temp_delta_stats": {
+    "min": 9.8,
+    "max": 20.9,
+    "avg": 13.770512820512819
+  }
+}

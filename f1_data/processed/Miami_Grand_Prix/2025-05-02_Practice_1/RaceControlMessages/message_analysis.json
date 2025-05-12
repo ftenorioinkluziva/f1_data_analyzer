@@ -1,0 +1,21 @@
+{
+  "category_counts": {
+    "Flag": 7,
+    "Other": 4
+  },
+  "flag_counts": {
+    "CLEAR": 3,
+    "DOUBLE YELLOW": 2,
+    "GREEN": 1,
+    "RED": 1
+  },
+  "investigation_count": 2,
+  "incident_count": 4,
+  "cars_involved": {
+    "4": 2
+  },
+  "sector_counts": {
+    "7.0": 2,
+    "13.0": 2
+  }
+}

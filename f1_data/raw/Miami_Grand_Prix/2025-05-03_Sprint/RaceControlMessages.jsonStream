@@ -1,0 +1,107 @@
+﻿00:12:40.891{"Messages":[{"Utc":"2025-05-03T15:30:00","Lap":1,"Category":"Flag","Flag":"GREEN","Scope":"Track","Message":"GREEN LIGHT - PIT EXIT OPEN"}]}
+00:13:47.969{"Messages":{"1":{"Utc":"2025-05-03T15:31:08","Lap":1,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":11,"Message":"DOUBLE YELLOW IN TRACK SECTOR 11"}}}
+00:13:49.053{"Messages":{"2":{"Utc":"2025-05-03T15:31:09","Lap":1,"Category":"Other","Message":"DRS DISABLED IN ZONE 1"}}}
+00:13:50.531{"Messages":{"3":{"Utc":"2025-05-03T15:31:10","Lap":1,"Category":"Flag","Flag":"YELLOW","Scope":"Sector","Sector":11,"Message":"YELLOW IN TRACK SECTOR 11"}}}
+00:14:10.511{"Messages":{"4":{"Utc":"2025-05-03T15:31:30","Lap":1,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":11,"Message":"DOUBLE YELLOW IN TRACK SECTOR 11"}}}
+00:14:19.996{"Messages":{"5":{"Utc":"2025-05-03T15:31:40","Lap":1,"Category":"Other","Message":"TRACK SURFACE SLIPPERY IN TRACK SECTOR 12"}}}
+00:14:39.496{"Messages":{"6":{"Utc":"2025-05-03T15:31:59","Lap":1,"Category":"Flag","Flag":"YELLOW","Scope":"Sector","Sector":13,"Message":"YELLOW IN TRACK SECTOR 13"}}}
+00:14:39.511{"Messages":{"7":{"Utc":"2025-05-03T15:31:59","Lap":1,"Category":"Flag","Flag":"YELLOW","Scope":"Sector","Sector":14,"Message":"YELLOW IN TRACK SECTOR 14"}}}
+00:15:21.043{"Messages":{"8":{"Utc":"2025-05-03T15:32:41","Lap":1,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":11,"Message":"CLEAR IN TRACK SECTOR 11"}}}
+00:15:21.043{"Messages":{"9":{"Utc":"2025-05-03T15:32:41","Lap":1,"Category":"Other","Message":"DRS ENABLED IN ZONE 1"}}}
+00:15:23.574{"Messages":{"10":{"Utc":"2025-05-03T15:32:43","Lap":1,"Category":"Other","Message":"TRACK SURFACE SLIPPERY IN TRACK SECTOR 11"}}}
+00:17:40.941{"Messages":{"11":{"Utc":"2025-05-03T15:35:01","Lap":1,"Category":"Other","Message":"PIT EXIT CLOSED"}}}
+00:19:37.958{"Messages":{"12":{"Utc":"2025-05-03T15:36:58","Lap":1,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":12,"Message":"CLEAR IN TRACK SECTOR 12"}}}
+00:19:49.974{"Messages":{"13":{"Utc":"2025-05-03T15:37:10","Lap":1,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":11,"Message":"DOUBLE YELLOW IN TRACK SECTOR 11"}}}
+00:19:51.005{"Messages":{"14":{"Utc":"2025-05-03T15:37:11","Lap":1,"Category":"Other","Message":"DRS DISABLED IN ZONE 1"}}}
+00:20:40.119{"Messages":{"15":{"Utc":"2025-05-03T15:38:00","Lap":1,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":15,"Message":"DOUBLE YELLOW IN TRACK SECTOR 15"}}}
+00:20:47.104{"Messages":{"16":{"Utc":"2025-05-03T15:38:07","Lap":1,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":13,"Message":"DOUBLE YELLOW IN TRACK SECTOR 13"}}}
+00:20:47.120{"Messages":{"17":{"Utc":"2025-05-03T15:38:07","Lap":1,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":14,"Message":"DOUBLE YELLOW IN TRACK SECTOR 14"}}}
+00:21:29.698{"Messages":{"18":{"Utc":"2025-05-03T15:38:49","Lap":1,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":15,"Message":"CLEAR IN TRACK SECTOR 15"}}}
+00:21:50.964{"Messages":{"19":{"Utc":"2025-05-03T15:39:11","Lap":1,"Category":"Other","Message":"INCIDENT INVOLVING CAR 16 (LEC) NOTED - UNSAFE CONDITION"}}}
+00:22:53.308{"Messages":{"20":{"Utc":"2025-05-03T15:40:13","Lap":1,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":13,"Message":"CLEAR IN TRACK SECTOR 13"}}}
+00:22:53.339{"Messages":{"21":{"Utc":"2025-05-03T15:40:13","Lap":1,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":14,"Message":"CLEAR IN TRACK SECTOR 14"}}}
+00:23:10.293{"Messages":{"22":{"Utc":"2025-05-03T15:40:30","Lap":1,"Category":"Flag","Flag":"YELLOW","Scope":"Sector","Sector":13,"Message":"YELLOW IN TRACK SECTOR 13"}}}
+00:23:10.293{"Messages":{"23":{"Utc":"2025-05-03T15:40:30","Lap":1,"Category":"Flag","Flag":"YELLOW","Scope":"Sector","Sector":14,"Message":"YELLOW IN TRACK SECTOR 14"}}}
+00:23:24.341{"Messages":{"24":{"Utc":"2025-05-03T15:40:44","Lap":1,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":13,"Message":"CLEAR IN TRACK SECTOR 13"}}}
+00:23:24.373{"Messages":{"25":{"Utc":"2025-05-03T15:40:44","Lap":1,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":14,"Message":"CLEAR IN TRACK SECTOR 14"}}}
+00:24:11.878{"Messages":{"26":{"Utc":"2025-05-03T15:41:31","Lap":1,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":13,"Message":"DOUBLE YELLOW IN TRACK SECTOR 13"}}}
+00:24:11.912{"Messages":{"27":{"Utc":"2025-05-03T15:41:31","Lap":1,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":14,"Message":"DOUBLE YELLOW IN TRACK SECTOR 14"}}}
+00:24:26.419{"Messages":{"28":{"Utc":"2025-05-03T15:41:46","Lap":1,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":13,"Message":"CLEAR IN TRACK SECTOR 13"}}}
+00:24:26.432{"Messages":{"29":{"Utc":"2025-05-03T15:41:46","Lap":1,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":14,"Message":"CLEAR IN TRACK SECTOR 14"}}}
+00:27:38.088{"Messages":{"30":{"Utc":"2025-05-03T15:44:58","Lap":1,"Category":"Other","Message":"FIA STEWARDS: INCIDENT INVOLVING CAR 16 (LEC) WILL BE INVESTIGATED AFTER THE SPRINT - UNSAFE CONDITION"}}}
+00:28:29.109{"Messages":{"31":{"Utc":"2025-05-03T15:45:49","Lap":1,"Category":"Other","Message":"RISK OF RAIN FOR F1 SPRINT IS 70%"}}}
+00:31:57.758{"Messages":{"32":{"Utc":"2025-05-03T15:49:17","Lap":1,"Category":"Other","Message":"DRS ENABLED IN ZONE 1"}}}
+00:32:04.805{"Messages":{"33":{"Utc":"2025-05-03T15:49:24","Lap":1,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":11,"Message":"DOUBLE YELLOW IN TRACK SECTOR 11"}}}
+00:32:05.820{"Messages":{"34":{"Utc":"2025-05-03T15:49:25","Lap":1,"Category":"Other","Message":"DRS DISABLED IN ZONE 1"}}}
+00:32:40.264{"Messages":{"35":{"Utc":"2025-05-03T15:50:00","Lap":1,"Category":"Other","Message":"DRS ENABLED IN ZONE 1"}}}
+00:32:40.280{"Messages":{"36":{"Utc":"2025-05-03T15:50:00","Lap":1,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":11,"Message":"CLEAR IN TRACK SECTOR 11"}}}
+00:34:22.987{"Messages":{"37":{"Utc":"2025-05-03T15:51:43","Lap":1,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":11,"Message":"DOUBLE YELLOW IN TRACK SECTOR 11"}}}
+00:34:24.063{"Messages":{"38":{"Utc":"2025-05-03T15:51:44","Lap":1,"Category":"Other","Message":"DRS DISABLED IN ZONE 1"}}}
+00:35:56.180{"Messages":{"39":{"Utc":"2025-05-03T15:53:16","Lap":1,"Category":"Other","Message":"DRS ENABLED IN ZONE 1"}}}
+00:35:56.205{"Messages":{"40":{"Utc":"2025-05-03T15:53:16","Lap":1,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":11,"Message":"CLEAR IN TRACK SECTOR 11"}}}
+00:37:41.588{"Messages":{"41":{"Utc":"2025-05-03T15:55:01","Lap":1,"Category":"Other","Message":"FORMATION LAP WILL BE STARTED BEHIND THE SAFETY CAR"}}}
+00:37:47.276{"Messages":{"42":{"Utc":"2025-05-03T15:55:07","Lap":1,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":11,"Message":"DOUBLE YELLOW IN TRACK SECTOR 11"}}}
+00:37:48.401{"Messages":{"43":{"Utc":"2025-05-03T15:55:08","Lap":1,"Category":"Other","Message":"DRS DISABLED IN ZONE 1"}}}
+00:38:51.826{"Messages":{"44":{"Utc":"2025-05-03T15:56:11","Lap":1,"Category":"Other","Message":"DRS ENABLED IN ZONE 1"}}}
+00:38:51.846{"Messages":{"45":{"Utc":"2025-05-03T15:56:11","Lap":1,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":11,"Message":"CLEAR IN TRACK SECTOR 11"}}}
+00:39:34.544{"Messages":{"46":{"Utc":"2025-05-03T15:56:54","Lap":1,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":11,"Message":"DOUBLE YELLOW IN TRACK SECTOR 11"}}}
+00:39:35.569{"Messages":{"47":{"Utc":"2025-05-03T15:56:55","Lap":1,"Category":"Other","Message":"DRS DISABLED IN ZONE 1"}}}
+00:39:43.964{"Messages":{"48":{"Utc":"2025-05-03T15:57:04","Lap":1,"Category":"Drs","Status":"DISABLED","Message":"DRS DISABLED"}}}
+00:40:47.653{"Messages":{"49":{"Utc":"2025-05-03T15:58:07","Lap":1,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":11,"Message":"CLEAR IN TRACK SECTOR 11"}}}
+00:46:28.692{"Messages":{"50":{"Utc":"2025-05-03T16:03:48","Lap":1,"Category":"Other","Message":"STARTING PROCEDURE SUSPENDED"}}}
+00:46:49.973{"Messages":{"51":{"Utc":"2025-05-03T16:04:10","Lap":1,"Category":"Flag","Flag":"RED","Scope":"Track","Message":"RED FLAG"}}}
+00:48:45.974{"Messages":{"52":{"Utc":"2025-05-03T16:06:06","Lap":1,"Category":"Flag","Flag":"CLEAR","Scope":"Track","Message":"TRACK CLEAR"}}}
+00:49:38.530{"Messages":{"53":{"Utc":"2025-05-03T16:06:58","Lap":1,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":11,"Message":"DOUBLE YELLOW IN TRACK SECTOR 11"}}}
+00:49:56.976{"Messages":{"54":{"Utc":"2025-05-03T16:07:17","Lap":1,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":11,"Message":"CLEAR IN TRACK SECTOR 11"}}}
+00:53:34.699{"Messages":{"55":{"Utc":"2025-05-03T16:10:54","Lap":1,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":11,"Message":"DOUBLE YELLOW IN TRACK SECTOR 11"}}}
+00:53:57.764{"Messages":{"56":{"Utc":"2025-05-03T16:11:17","Lap":1,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":11,"Message":"CLEAR IN TRACK SECTOR 11"}}}
+00:57:53.748{"Messages":{"57":{"Utc":"2025-05-03T16:15:13","Lap":1,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":18,"Message":"DOUBLE YELLOW IN TRACK SECTOR 18"}}}
+00:58:56.649{"Messages":{"58":{"Utc":"2025-05-03T16:16:16","Lap":1,"Category":"Other","Message":"SPRINT WILL START AT 12:25"}}}
+01:00:41.029{"Messages":{"59":{"Utc":"2025-05-03T16:18:01","Lap":1,"Category":"Other","Message":"CORRECTION: SPRINT WILL START AT 12:28"}}}
+01:01:43.565{"Messages":{"60":{"Utc":"2025-05-03T16:19:03","Lap":1,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":18,"Message":"CLEAR IN TRACK SECTOR 18"}}}
+01:01:44.987{"Messages":{"61":{"Utc":"2025-05-03T16:19:05","Lap":1,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":7,"Message":"DOUBLE YELLOW IN TRACK SECTOR 7"}}}
+01:02:11.105{"Messages":{"62":{"Utc":"2025-05-03T16:19:31","Lap":1,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":7,"Message":"CLEAR IN TRACK SECTOR 7"}}}
+01:10:45.690{"Messages":{"63":{"Utc":"2025-05-03T16:28:05","Lap":1,"Category":"Flag","Flag":"GREEN","Scope":"Track","Message":"GREEN LIGHT - PIT EXIT OPEN"}}}
+01:14:00.535{"Messages":{"64":{"Utc":"2025-05-03T16:31:20","Lap":2,"Category":"Other","Message":"STANDING START"}}}
+01:21:34.307{"Messages":{"65":{"Utc":"2025-05-03T16:38:54","Lap":5,"Category":"Other","Message":"LAP 1 TURN 1 INCIDENT INVOLVING CARS 12 (ANT) AND 81 (PIA) NOTED"}}}
+01:22:43.042{"Messages":{"66":{"Utc":"2025-05-03T16:40:03","Lap":6,"Category":"Other","Message":"FIA STEWARDS: LAP 1 TURN 1 INCIDENT INVOLVING CARS 12 (ANT) AND 81 (PIA) REVIEWED NO FURTHER INVESTIGATION"}}}
+01:23:07.460{"Messages":{"67":{"Utc":"2025-05-03T16:40:27","Lap":6,"Category":"Other","Message":"INCIDENT INVOLVING CAR 1 (VER) NOTED - FALSE START - OUT OF POSITION"}}}
+01:24:19.804{"Messages":{"68":{"Utc":"2025-05-03T16:41:39","Lap":7,"Category":"Other","Message":"FIA STEWARDS: INCIDENT INVOLVING CAR 1 (VER) REVIEWED NO FURTHER INVESTIGATION - FALSE START - OUT OF POSITION"}}}
+01:26:04.620{"Messages":{"69":{"Utc":"2025-05-03T16:43:24","Lap":8,"Category":"Other","Message":"CAR 7 (DOO) TIME 2:13.457 DELETED - TRACK LIMITS AT TURN 11 LAP 3 12:35:26"}}}
+01:27:04.498{"Messages":{"70":{"Utc":"2025-05-03T16:44:24","Lap":8,"Category":"Other","Message":"CAR 55 (SAI) TIME 1:43.395 DELETED - TRACK LIMITS AT TURN 17 LAP 7 12:42:55"}}}
+01:30:29.008{"Messages":{"71":{"Utc":"2025-05-03T16:47:49","Lap":11,"Category":"Drs","Status":"ENABLED","Message":"DRS ENABLED"}}}
+01:34:04.856{"Messages":{"72":{"Utc":"2025-05-03T16:51:24","Lap":13,"Category":"Flag","Flag":"YELLOW","Scope":"Sector","Sector":15,"Message":"YELLOW IN TRACK SECTOR 15"}}}
+01:34:05.336{"Messages":{"73":{"Utc":"2025-05-03T16:51:25","Lap":13,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":15,"Message":"DOUBLE YELLOW IN TRACK SECTOR 15"}}}
+01:34:12.895{"Messages":{"74":{"Utc":"2025-05-03T16:51:32","Lap":13,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":15,"Message":"CLEAR IN TRACK SECTOR 15"}}}
+01:34:18.871{"Messages":{"75":{"Utc":"2025-05-03T16:51:38","Lap":13,"Category":"Other","Message":"TRACK SURFACE SLIPPERY IN TRACK SECTOR 15"}}}
+01:34:26.854{"Messages":{"76":{"Utc":"2025-05-03T16:51:46","Lap":13,"Category":"Other","Message":"YELLOW IN PIT LANE"}}}
+01:34:52.345{"Messages":{"77":{"Utc":"2025-05-03T16:52:12","Lap":13,"Category":"Other","Message":"PIT LANE ENTRY OPEN"}}}
+01:36:10.129{"Messages":{"78":{"Utc":"2025-05-03T16:53:30","Lap":14,"Category":"Other","Message":"CAR 12 (ANT) LAP DELETED - TRACK LIMITS AT TURN 11 LAP 13 12:52:34"}}}
+01:36:23.044{"Messages":{"79":{"Utc":"2025-05-03T16:53:43","Lap":14,"Category":"Other","Message":"TRACK SURFACE SLIPPERY IN TRACK SECTOR 14"}}}
+01:36:56.753{"Messages":{"80":{"Utc":"2025-05-03T16:54:16","Lap":14,"Category":"Other","Message":"PIT LANE INCIDENT INVOLVING CARS 1 (VER) AND 12 (ANT) NOTED - UNSAFE RELEASE"}}}
+01:37:12.680{"Messages":{"81":{"Utc":"2025-05-03T16:54:32","Lap":14,"Category":"Other","Message":"CAR 22 (TSU) TIME 1:39.140 DELETED - TRACK LIMITS AT TURN 15 LAP 12 12:51:28"}}}
+01:37:17.687{"Messages":{"82":{"Utc":"2025-05-03T16:54:37","Lap":14,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":13,"Message":"DOUBLE YELLOW IN TRACK SECTOR 13"}}}
+01:37:28.094{"Messages":{"83":{"Utc":"2025-05-03T16:54:48","Lap":15,"Category":"SafetyCar","Status":"DEPLOYED","Mode":"SAFETY CAR","Message":"SAFETY CAR DEPLOYED"}}}
+01:37:28.167{"Messages":{"84":{"Utc":"2025-05-03T16:54:48","Lap":15,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":14,"Message":"CLEAR IN TRACK SECTOR 14"}}}
+01:37:28.172{"Messages":{"85":{"Utc":"2025-05-03T16:54:48","Lap":15,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":15,"Message":"CLEAR IN TRACK SECTOR 15"}}}
+01:38:27.608{"Messages":{"86":{"Utc":"2025-05-03T16:55:47","Lap":15,"Category":"Other","Message":"FIA STEWARDS: PIT LANE INCIDENT INVOLVING CARS 1 (VER) AND 12 (ANT) UNDER INVESTIGATION - UNSAFE RELEASE"}}}
+01:39:49.835{"Messages":{"87":{"Utc":"2025-05-03T16:57:09","Lap":15,"Category":"Other","Message":"FIA STEWARDS: 10 SECOND TIME PENALTY FOR CAR 1 (VER) - UNSAFE RELEASE"}}}
+01:41:00.889{"Messages":{"88":{"Utc":"2025-05-03T16:58:20","Lap":16,"Category":"Other","Message":"TURN 12 INCIDENT INVOLVING CARS 30 (LAW) AND 14 (ALO) NOTED - CAUSING A COLLISION"}}}
+01:41:54.681{"Messages":{"89":{"Utc":"2025-05-03T16:59:14","Lap":16,"Category":"Other","Message":"RECOVERY VEHICLE ON TRACK AT TURN 12"}}}
+01:43:29.250{"Messages":{"90":{"Utc":"2025-05-03T17:00:49","Lap":17,"Category":"Other","Message":"FIA STEWARDS: TURN 12 INCIDENT INVOLVING CARS 30 (LAW) AND 14 (ALO) WILL BE INVESTIGATED AFTER THE SPRINT - CAUSING A COLLISION"}}}
+01:45:22.653{"Messages":{"91":{"Utc":"2025-05-03T17:02:42","Lap":18,"Category":"SafetyCar","Status":"IN THIS LAP","Mode":"SAFETY CAR","Message":"SAFETY CAR IN THIS LAP"}}}
+01:46:14.584{"Messages":{"92":{"Utc":"2025-05-03T17:03:34","Lap":18,"Category":"Other","Message":"PIT LANE INCIDENT INVOLVING CARS 87 (BEA) AND 27 (HUL) NOTED - UNSAFE RELEASE"}}}
+01:46:17.318{"Messages":{"93":{"Utc":"2025-05-03T17:03:37","Lap":18,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":13,"Message":"CLEAR IN TRACK SECTOR 13"}}}
+01:47:08.465{"Messages":{"94":{"Utc":"2025-05-03T17:04:28","Lap":18,"Category":"Flag","Flag":"CLEAR","Scope":"Track","Message":"TRACK CLEAR"}}}
+01:47:22.289{"Messages":{"95":{"Utc":"2025-05-03T17:04:42","Lap":18,"Category":"Flag","Flag":"CHEQUERED","Scope":"Track","Message":"CHEQUERED FLAG"}}}
+01:48:07.634{"Messages":{"96":{"Utc":"2025-05-03T17:05:27","Lap":18,"Category":"Other","Message":"FIA STEWARDS: PIT LANE INCIDENT INVOLVING CARS 87 (BEA) AND 27 (HUL) WILL BE INVESTIGATED AFTER THE SPRINT - UNSAFE RELEASE"}}}
+01:50:28.442{"Messages":{"97":{"Utc":"2025-05-03T17:07:48","Lap":18,"Category":"Other","Message":"INCIDENT INVOLVING CAR 23 (ALB) NOTED - STARTING PROCEDURE INFRINGEMENT"}}}
+01:50:50.880{"Messages":{"98":{"Utc":"2025-05-03T17:08:10","Lap":18,"Category":"Other","Message":"CORRECTION: INCIDENT INVOLVING CAR 23 (ALB) NOTED -SAFETY CAR PROCEDURE INFRINGEMENT"}}}
+01:51:49.179{"Messages":{"99":{"Utc":"2025-05-03T17:09:09","Lap":18,"Category":"Other","Message":"FIA STEWARDS: INCIDENT INVOLVING CAR 23 (ALB) WILL BE INVESTIGATED AFTER THE SPRINT - SAFETY CAR PROCEDURE INFRINGEMENT"}}}
+01:52:19.087{"Messages":{"100":{"Utc":"2025-05-03T17:09:39","Lap":18,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":20,"Message":"DOUBLE YELLOW IN TRACK SECTOR 20"}}}
+01:52:42.628{"Messages":{"101":{"Utc":"2025-05-03T17:10:02","Lap":18,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":15,"Message":"DOUBLE YELLOW IN TRACK SECTOR 15"}}}
+01:53:27.515{"Messages":{"102":{"Utc":"2025-05-03T17:10:47","Lap":18,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":19,"Message":"DOUBLE YELLOW IN TRACK SECTOR 19"}}}
+01:56:36.695{"Messages":{"103":{"Utc":"2025-05-03T17:13:56","Lap":18,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":15,"Message":"CLEAR IN TRACK SECTOR 15"}}}
+01:57:27.231{"Messages":{"104":{"Utc":"2025-05-03T17:14:47","Lap":18,"Category":"Flag","Flag":"DOUBLE YELLOW","Scope":"Sector","Sector":18,"Message":"DOUBLE YELLOW IN TRACK SECTOR 18"}}}
+01:57:33.789{"Messages":{"105":{"Utc":"2025-05-03T17:14:53","Lap":18,"Category":"Flag","Flag":"CLEAR","Scope":"Sector","Sector":18,"Message":"CLEAR IN TRACK SECTOR 18"}}}
+02:12:44.200{"Messages":{"106":{"Utc":"2025-05-03T17:30:04","Lap":18,"Category":"Other","Message":"F1 - POST-SPRINT PARC FERME - WORK MAY COMMENCE AT 13:32"}}}
