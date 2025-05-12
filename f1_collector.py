@@ -1,53 +1,20 @@
-# f1_collector.py - versão com suporte para chaves
+# f1_collector.py - versão modificada para coletar apenas dados brutos
 import asyncio
 import json
-import base64
-import zlib
-import requests
 import aiohttp
 from datetime import datetime
 import os
 from pathlib import Path
-import pandas as pd
 import argparse
 import glob
 
 # Configuração
 OUTPUT_DIR = Path("f1_data")
 RAW_DIR = OUTPUT_DIR / "raw"
-PROCESSED_DIR = OUTPUT_DIR / "processed"
 
 # Criar diretórios
 OUTPUT_DIR.mkdir(exist_ok=True)
 RAW_DIR.mkdir(exist_ok=True)
-PROCESSED_DIR.mkdir(exist_ok=True)
-
-# Lista de tópicos importantes a coletar
-IMPORTANT_TOPICS = [
-    "SessionInfo", "ContentStreams", "TrackStatus",
-    "SessionData", "AudioStreams", "ChampionshipPrediction", "CarData.z", "Position.z",
-    "DriverList", "TimingDataF1", "TimingData", "TopThree", "LapSeries", "TimingAppData", "TimingStats", "TyreStintSeries",
-    "SessionStatus", "WeatherData", "TeamRadio", "TlaRcm", "RaceControlMessages",
-    "DriverRaceInfo", "LapCount", "CurrentTyres", "PitLaneTimeCollection"
-]
-
-# Decodificador similar ao do OpenF1
-def decode_data(data):
-    data = data.strip()
-    try:
-        return json.loads(data.strip('"'))
-    except Exception:
-        try:
-            s = zlib.decompress(base64.b64decode(data), -zlib.MAX_WBITS)
-            return json.loads(s.decode("utf-8-sig"))
-        except:
-            return None
-
-# Função para converter para formato JSON serializável
-def json_serializable(obj):
-    if isinstance(obj, datetime):
-        return obj.isoformat()
-    return str(obj)
 
 def fix_utf8_bom(content):
     """Corrige o problema de UTF-8 BOM nos arquivos JSON."""
@@ -68,7 +35,8 @@ async def check_url_exists_async(session, url):
             if response.status == 200:
                 return True, await response.read()
             return False, None
-    except:
+    except Exception as e:
+        print(f"Erro ao acessar {url}: {str(e)}")
         return False, None
 
 # Função para extrair tópicos disponíveis de uma sessão
@@ -94,106 +62,38 @@ async def get_session_topics(session, session_url):
     
     return topics
 
-# Função para buscar e processar um tópico
-async def process_topic(http_session, session_url, topic, race_name, session_name):
-    print(f"Processando tópico: {topic}")
+# Função para baixar dados brutos de um tópico
+async def download_raw_data(http_session, session_url, topic, race_name, session_name):
+    print(f"Baixando tópico: {topic}")
     
-    # Criar diretórios para os dados brutos e processados
+    # Criar diretório para os dados brutos
     raw_topic_dir = RAW_DIR / race_name / session_name
-    processed_topic_dir = PROCESSED_DIR / race_name / session_name / topic
-    
     raw_topic_dir.mkdir(exist_ok=True, parents=True)
-    processed_topic_dir.mkdir(exist_ok=True, parents=True)
     
     # Arquivo para os dados brutos
     raw_file = raw_topic_dir / f"{topic}.jsonStream"
     
     # Verificar se o arquivo já existe
     if raw_file.exists():
-        print(f"  Arquivo bruto já existe: {raw_file}")
-        with open(raw_file, "rb") as f:
-            content = f.read()
-    else:
-        # Buscar dados do tópico
-        topic_url = f"{session_url}/{topic}.jsonStream"
-        exists, content = await check_url_exists_async(http_session, topic_url)
-        
-        if not exists or not content:
-            print(f"  Não foi possível acessar {topic_url}")
-            return
-        
-        # Salvar dados brutos
-        with open(raw_file, "wb") as f:
-            f.write(content)
-        
-        print(f"  Dados brutos salvos em {raw_file}")
+        file_size = raw_file.stat().st_size
+        print(f"  Arquivo já existe: {raw_file} ({file_size/1024:.1f} KB)")
+        return raw_file
     
-    # Processar os dados
-    try:
-        lines = content.decode('utf-8', errors='replace').split("\r\n")
-        processed_data = []
-        
-        for i, line in enumerate(lines):
-            if not line:
-                continue
-            
-            # Tenta separar por vírgula (considerando que o formato é "tempo,dados")
-            parts = line.split(",", 1)
-            if len(parts) != 2:
-                continue
-            
-            time_str, data_str = parts
-            decoded_data = decode_data(data_str)
-            
-            if decoded_data:
-                entry = {
-                    "time": time_str,
-                    "data": decoded_data
-                }
-                processed_data.append(entry)
-            
-            # Salvar a cada 1000 registros para economizar memória
-            if (i + 1) % 1000 == 0:
-                batch_file = processed_topic_dir / f"{topic}_batch_{(i+1)//1000}.json"
-                with open(batch_file, 'w', encoding='utf-8') as f:
-                    json.dump(processed_data[-1000:], f, default=json_serializable, indent=2)
-                
-                print(f"  Processados {i+1} registros...")
-        
-        # Salvar metadados
-        metadata_file = processed_topic_dir / f"{topic}_metadata.json"
-        with open(metadata_file, 'w', encoding='utf-8') as f:
-            metadata = {
-                "total_entries": len(processed_data),
-                "race_name": race_name,
-                "session_name": session_name,
-                "topic": topic,
-                "session_url": session_url,
-                "generated_at": datetime.now().isoformat()
-            }
-            json.dump(metadata, f, indent=2)
-        
-        print(f"  Dados processados para {topic}: {len(processed_data)} registros")
-        
-        # Criar DataFrame e salvar em CSV (para alguns tipos de dados)
-        if topic in ["DriverList", "WeatherData"]:
-            try:
-                # Extrair apenas os dados sem a estrutura de "time"
-                extracted_data = []
-                for entry in processed_data:
-                    if isinstance(entry["data"], dict):
-                        extracted_data.append(entry["data"])
-                
-                if extracted_data:
-                    df = pd.json_normalize(extracted_data)
-                    csv_file = processed_topic_dir / f"{topic}.csv"
-                    df.to_csv(csv_file, index=False)
-                    print(f"  Dados CSV salvos em {csv_file}")
-            except Exception as e:
-                print(f"  Erro ao criar CSV para {topic}: {str(e)}")
-        
-    except Exception as e:
-        print(f"  Erro ao processar {topic}: {str(e)}")
+    # Buscar dados do tópico
+    topic_url = f"{session_url}/{topic}.jsonStream"
+    exists, content = await check_url_exists_async(http_session, topic_url)
+    
+    if not exists or not content:
+        print(f"  Não foi possível acessar {topic_url}")
+        return None
+    
+    # Salvar dados brutos
+    with open(raw_file, "wb") as f:
+        f.write(content)
+    
+    file_size = len(content)
+    print(f"  Dados brutos salvos em {raw_file} ({file_size/1024:.1f} KB)")
+    return raw_file
 
 # Função para processar uma sessão específica
 async def process_session(year, race_path, session_name, meeting_key, session_key):
@@ -212,25 +112,27 @@ async def process_session(year, race_path, session_name, meeting_key, session_ke
             print("  Nenhum tópico encontrado.")
             return
         
-        print(f"  Encontrados {len(topics)} tópicos")
+        print(f"  Encontrados {len(topics)} tópicos.")
         
-        # Filtrar apenas tópicos importantes
-        selected_topics = [t for t in IMPORTANT_TOPICS if t in topics]
+        # Listar todos os tópicos encontrados
+        print("  Lista de todos os tópicos encontrados:")
+        for i, topic in enumerate(sorted(topics)):
+            print(f"    {i+1}. {topic}")
         
-        if not selected_topics:
-            # Se nenhum dos tópicos importantes foi encontrado, usar os primeiros da lista
-            selected_topics = topics[:3]
+        # Baixar todos os tópicos disponíveis com limite de concorrência
+        semaphore = asyncio.Semaphore(5)  # Limitar a 5 downloads concorrentes
         
-        print(f"  Processando tópicos: {', '.join(selected_topics)}")
+        async def download_with_limit(topic):
+            async with semaphore:
+                return await download_raw_data(session, session_url, topic, race_name, session_name)
+                
+        # Criar tarefas para todos os tópicos
+        tasks = [download_with_limit(topic) for topic in topics]
+        results = await asyncio.gather(*tasks)
         
-        # Processar tópicos em paralelo (com limite de concorrência)
-        tasks = []
-        for topic in selected_topics:
-            task = process_topic(session, session_url, topic, race_name, session_name)
-            tasks.append(task)
-        
-        # Executar as tarefas com um limite de concorrência para evitar sobrecarga
-        await asyncio.gather(*tasks)
+        # Contar quantos tópicos foram baixados com sucesso
+        successful_downloads = [r for r in results if r is not None]
+        print(f"\n  Baixados com sucesso: {len(successful_downloads)}/{len(topics)} tópicos")
 
 # Função para encontrar informações a partir das chaves de meeting e session
 def find_meeting_session_by_keys(meeting_key, session_key):
@@ -366,8 +268,7 @@ async def main(meeting_key=None, session_key=None, list_all=False):
         
         print("\nColeta concluída!")
         print(f"Dados brutos salvos em: {RAW_DIR.absolute()}")
-        print(f"Dados processados salvos em: {PROCESSED_DIR.absolute()}")
-        print("\nVocê pode começar sua análise verificando os arquivos _metadata.json ou os arquivos CSV gerados.")
+        print("\nTodos os dados brutos foram salvos com sucesso. Você pode processá-los usando suas ferramentas preferidas.")
         return
     
     # Processar uma única sessão usando as chaves fornecidas
@@ -376,12 +277,11 @@ async def main(meeting_key=None, session_key=None, list_all=False):
     
     print("\nColeta concluída!")
     print(f"Dados brutos salvos em: {RAW_DIR.absolute()}")
-    print(f"Dados processados salvos em: {PROCESSED_DIR.absolute()}")
-    print("\nVocê pode começar sua análise verificando os arquivos _metadata.json ou os arquivos CSV gerados.")
+    print("\nTodos os dados brutos foram salvos com sucesso. Você pode processá-los usando suas ferramentas preferidas.")
 
 if __name__ == "__main__":
     # Configurar argumentos da linha de comando
-    parser = argparse.ArgumentParser(description="Coletar dados de corridas da F1")
+    parser = argparse.ArgumentParser(description="Coletar dados brutos de corridas da F1")
     parser.add_argument("--meeting", type=int, help="Chave do meeting (corrida)")
     parser.add_argument("--session", type=int, help="Chave da session (sessão)")
     parser.add_argument("--list", action="store_true", help="Listar todas as corridas e sessões disponíveis")
