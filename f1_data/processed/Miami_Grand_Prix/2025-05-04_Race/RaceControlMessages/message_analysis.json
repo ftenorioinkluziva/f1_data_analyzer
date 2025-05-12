@@ -1,0 +1,33 @@
+{
+  "category_counts": {
+    "Flag": 40,
+    "Other": 27,
+    "SafetyCar": 6,
+    "Drs": 4
+  },
+  "flag_counts": {
+    "CLEAR": 15,
+    "DOUBLE YELLOW": 12,
+    "BLUE": 9,
+    "GREEN": 2,
+    "YELLOW": 1,
+    "CHEQUERED": 1
+  },
+  "investigation_count": 8,
+  "incident_count": 16,
+  "cars_involved": {
+    "55": 4,
+    "22": 2,
+    "10": 2
+  },
+  "sector_counts": {
+    "7.0": 6,
+    "3.0": 4,
+    "2.0": 4,
+    "4.0": 3,
+    "13.0": 3,
+    "20.0": 2,
+    "14.0": 2,
+    "5.0": 1
+  }
+}
