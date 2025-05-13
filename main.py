@@ -1,20 +1,22 @@
 """
 Main entry point for the F1 Data Analyzer application.
-Provides a command-line interface to collect, process and visualize F1 race data.
+Provides a command-line interface to explore, collect, process and visualize F1 race data.
 """
 import argparse
 import sys
+import os
+import subprocess
+import importlib
 from pathlib import Path
+import asyncio
 
-from src.collectors.race_data_collector import RaceDataCollector
+# Adicionar o diretório raiz ao sys.path para importar módulos corretamente
+sys.path.insert(0, str(Path(__file__).parent.absolute()))
+
+# Importar classes dos processadores para uso direto
 from src.processors.timing_data_processor import TimingDataProcessor
 from src.processors.car_data_processor import CarDataProcessor
 from src.processors.timing_app_processor import TimingAppProcessor
-from src.processors.stint_analyzer import StintAnalyzer
-from src.visualizers.lap_time_visualizer import LapTimeVisualizer
-from src.visualizers.telemetry_visualizer import TelemetryVisualizer
-from src.visualizers.position_visualizer import PositionVisualizer
-from src.visualizers.tire_strategy_visualizer import TireStrategyVisualizer
 from src.processors.weather_data_processor import WeatherDataProcessor
 from src.processors.current_tyres_processor import CurrentTyresProcessor
 from src.processors.driver_list_processor import DriverListProcessor
@@ -22,10 +24,24 @@ from src.processors.pit_lane_processor import PitLaneProcessor
 from src.processors.position_processor import PositionProcessor
 from src.processors.race_control_messages_processor import RaceControlMessagesProcessor
 from src.processors.team_radio_processor import TeamRadioProcessor
-
+from src.processors.stint_analyzer import StintAnalyzer
 
 import config
 
+# Mapeamento de nomes de tópicos para suas classes de processador
+PROCESSOR_MAP = {
+    "TimingData": TimingDataProcessor,
+    "CarData.z": CarDataProcessor,
+    "TimingAppData": TimingAppProcessor,
+    "WeatherData": WeatherDataProcessor,
+    "CurrentTyres": CurrentTyresProcessor,
+    "DriverList": DriverListProcessor,
+    "PitLaneTimeCollection": PitLaneProcessor,
+    "Position.z": PositionProcessor,
+    "RaceControlMessages": RaceControlMessagesProcessor,
+    "TeamRadio": TeamRadioProcessor,
+    "StintAnalysis": StintAnalyzer
+}
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="F1 Data Analyzer - Collect and analyze Formula 1 race data")
@@ -36,11 +52,10 @@ def parse_arguments():
     explore_parser = subparsers.add_parser("explore", help="Explore available F1 data")
 
     # Collect command
-    collect_parser = subparsers.add_parser("collect", help="Collect F1 data from the official API")
-    collect_parser.add_argument("--year", type=str, help="Year of the race (e.g., 2024)")
-    collect_parser.add_argument("--race", type=str, help="Race name (e.g., Miami_Grand_Prix)")
-    collect_parser.add_argument("--session", type=str, help="Session name (e.g., Race, Qualifying, Practice_1)")
-    collect_parser.add_argument("--topics", nargs="+", help="Specific topics to collect (default: all important topics)")
+    collect_parser = subparsers.add_parser("collect", help="Collect F1 data using f1_collector.py")
+    collect_parser.add_argument("--list", action="store_true", help="List all available races and sessions")
+    collect_parser.add_argument("--meeting", type=int, help="Meeting key (race)")
+    collect_parser.add_argument("--session", type=int, help="Session key (session)")
     
     # Process command
     process_parser = subparsers.add_parser("process", help="Process collected raw data")
@@ -48,189 +63,182 @@ def parse_arguments():
     process_parser.add_argument("--session", type=str, required=True, help="Session name to process")
     process_parser.add_argument("--topics", nargs="+", help="Specific topics to process (default: all available)")
     
-    # Visualize command
-    visualize_parser = subparsers.add_parser("visualize", help="Create visualizations from processed data")
-    visualize_parser.add_argument("--race", type=str, required=True, help="Race name to visualize")
-    visualize_parser.add_argument("--session", type=str, required=True, help="Session name to visualize")
-    visualize_parser.add_argument("--type", choices=["lap_times", "telemetry", "positions", "tire_strategy", "all"], 
-                               default="all", help="Type of visualization to create")
-    visualize_parser.add_argument("--drivers", nargs="+", help="Driver numbers to include in visualization")
-    
-    # Full pipeline command
-    pipeline_parser = subparsers.add_parser("pipeline", help="Run the full data pipeline (collect, process, visualize)")
-    pipeline_parser.add_argument("--year", type=str, required=True, help="Year of the race")
-    pipeline_parser.add_argument("--race", type=str, required=True, help="Race name")
-    pipeline_parser.add_argument("--session", type=str, required=True, help="Session name")
+    # Import command
+    import_parser = subparsers.add_parser("import", help="Import race data to Supabase")
     
     return parser.parse_args()
 
-def run_explore(args):
-    """Explore available F1 data in the API."""
-    print("Exploring available F1 data...")
+def run_f1_explorer():
+    """Execute f1_explorer.py to explore available F1 data."""
+    print("Explorando dados disponíveis da F1...")
     
-    # This function is defined in f1_explorer.py
-    from f1_explorer import explore_available_data
-    results = explore_available_data()
-    
-    if results:
-        print("Exploration completed successfully.")
-    else:
-        print("Exploration failed or no data found.")
-
-async def run_collect(args):
-    """Collect F1 data from the official API"""
-    collector = RaceDataCollector()
-    
-    year = args.year
-    race = args.race
-    session = args.session
-    topics = args.topics or config.IMPORTANT_TOPICS
-    
-    print(f"Collecting data for {year}/{race}/{session}...")
-    await collector.collect_session_data(year, race, session, topics)
-    print("Data collection completed")
-
-def run_process(args):
-    """Process collected raw data"""
-    race = args.race
-    session = args.session
-    topics = args.topics
-    
-    print(f"Processing data for {race}/{session}...")
-    
-    # Process timing data if available or requested
-    if topics is None or "TimingData" in topics:
-        timing_processor = TimingDataProcessor()
-        timing_processor.process(race, session)
-    
-    # Process car data if available or requested
-    if topics is None or "CarData.z" in topics:
-        car_processor = CarDataProcessor()
-        car_processor.process(race, session)
-    
-    # Process timing app data if available or requested
-    if topics is None or "TimingAppData" in topics:
-        app_processor = TimingAppProcessor()
-        app_processor.process(race, session)
-
-    # Process weather data if available or requested
-    if topics is None or "WeatherData" in topics:
-        weather_processor = WeatherDataProcessor()
-        weather_processor.process(race, session)  
-
-    # Process current tyres data if available or requested
-    if topics is None or "CurrentTyres" in topics:
-        tyres_processor = CurrentTyresProcessor()
-        tyres_processor.process(race, session)    
-
-    # Process driver list data if available or requested
-    if topics is None or "DriverList" in topics:
-        driver_list_processor = DriverListProcessor()
-        driver_list_processor.process(race, session)        
-
-    # Process pit lane time collection data if available or requested
-    if topics is None or "PitLaneTimeCollection" in topics:
-        pit_lane_processor = PitLaneProcessor()
-        pit_lane_processor.process(race, session)           
-
-    # Process position data if available or requested
-    if topics is None or "Position.z" in topics:
-        position_processor = PositionProcessor()
-        position_processor.process(race, session)       
-
-    # Process race control messages if available or requested
-    if topics is None or "RaceControlMessages" in topics:
-        messages_processor = RaceControlMessagesProcessor()
-        messages_processor.process(race, session)     
+    try:
+        # Executar o script f1_explorer.py como um processo separado
+        result = subprocess.run(["python", "f1_explorer.py"], check=True)
         
-    # Process team radio data if available or requested
-    if topics is None or "TeamRadio" in topics:
-        radio_processor = TeamRadioProcessor()
-        radio_processor.process(race, session)           
-    
-    # Analyze stints if both timing data and timing app data are available
-    timing_data_path = config.RAW_DATA_DIR / race / session / "TimingData.jsonStream"
-    timing_app_path = config.RAW_DATA_DIR / race / session / "TimingAppData.jsonStream"
-    
-    if timing_data_path.exists() and timing_app_path.exists():
-        stint_analyzer = StintAnalyzer()
-        stint_analyzer.analyze(race, session)
-    
-    print("Data processing completed")
+        if result.returncode == 0:
+            print("Exploração concluída com sucesso.")
+            print("Os arquivos index_YEAR.json foram gerados na pasta f1_data_explorer/")
+        else:
+            print("Exploração falhou.")
+    except subprocess.CalledProcessError as e:
+        print(f"Erro ao executar f1_explorer.py: {str(e)}")
+    except FileNotFoundError:
+        print("Arquivo f1_explorer.py não encontrado. Certifique-se de que está no diretório correto.")
 
-def run_visualize(args):
-    """Create visualizations from processed data"""
-    race = args.race
-    session = args.session
-    viz_type = args.type
-    driver_numbers = args.drivers
+def run_f1_collector(args):
+    """Execute f1_collector.py to collect F1 data."""
+    command = ["python", "f1_collector.py"]
     
-    print(f"Creating visualizations for {race}/{session}...")
+    if args.list:
+        command.append("--list")
+    elif args.meeting and args.session:
+        command.extend(["--meeting", str(args.meeting), "--session", str(args.session)])
+    else:
+        print("Especifique --list para listar as corridas/sessões disponíveis ou forneça --meeting e --session para coletar dados.")
+        return
     
-    # Create visualizations based on the requested type
-    if viz_type in ["lap_times", "all"]:
-        lap_time_viz = LapTimeVisualizer()
-        lap_time_viz.create_visualizations(race, session, driver_numbers)
-    
-    if viz_type in ["telemetry", "all"]:
-        telemetry_viz = TelemetryVisualizer()
-        telemetry_viz.create_visualizations(race, session, driver_numbers)
-    
-    if viz_type in ["positions", "all"]:
-        position_viz = PositionVisualizer()
-        position_viz.create_visualizations(race, session, driver_numbers)
-    
-    if viz_type in ["tire_strategy", "all"]:
-        tire_viz = TireStrategyVisualizer()
-        tire_viz.create_visualizations(race, session, driver_numbers)
-    
-    print("Visualization completed")
+    try:
+        print(f"Executando: {' '.join(command)}")
+        subprocess.run(command, check=True)
+        
+        if args.list:
+            print("\nUse o comando a seguir para coletar dados:")
+            print("python main.py collect --meeting [MEETING_KEY] --session [SESSION_KEY]")
+        else:
+            print("\nColeta de dados concluída.")
+            print("\nPara processar os dados coletados, use:")
+            print("python main.py process --race [RACE_NAME] --session [SESSION_NAME]")
+    except subprocess.CalledProcessError as e:
+        print(f"Erro ao executar f1_collector.py: {str(e)}")
+    except FileNotFoundError:
+        print("Arquivo f1_collector.py não encontrado. Certifique-se de que está no diretório correto.")
 
-async def run_pipeline(args):
-    """Run the full data pipeline (collect, process, visualize)"""
-    # First collect the data
-    await run_collect(args)
+def run_processor(processor_class, meeting_key, session_key):
+    """
+    Executa um processador específico para processar os dados.
     
-    # Then process it
-    process_args = argparse.Namespace(
-        race=args.race,
-        session=args.session,
-        topics=None
-    )
-    run_process(process_args)
-    
-    # Finally visualize it
-    visualize_args = argparse.Namespace(
-        race=args.race,
-        session=args.session,
-        type="all",
-        drivers=None
-    )
-    run_visualize(visualize_args)
+    Args:
+        processor_class: Classe do processador
+        race_name: Nome da corrida
+        session_name: Nome da sessão
+        
+    Returns:
+        dict: Resultados do processamento
+    """
+    try:
+        processor = processor_class()
+        result = processor.process(meeting_key, session_key)
+        return result
+    except Exception as e:
+        print(f"Erro ao executar o processador {processor_class.__name__}: {str(e)}")
+        return None
 
-async def main():
+def detect_available_topics(meeting_key, session_key):
+    """
+    Detecta quais tópicos estão disponíveis para uma corrida e sessão específicas.
+    
+    Args:
+        race_name: Nome da corrida
+        session_name: Nome da sessão
+        
+    Returns:
+        list: Lista de tópicos disponíveis
+    """
+    raw_dir = config.RAW_DATA_DIR / meeting_key / session_key
+    
+    if not raw_dir.exists():
+        print(f"Diretório de dados brutos não encontrado: {raw_dir}")
+        return []
+    
+    available_topics = []
+    
+    for file_path in raw_dir.glob("*.jsonStream"):
+        topic = file_path.stem
+        available_topics.append(topic)
+    
+    return available_topics
+
+def run_import_to_supabase():
+    """Execute import_races_to_supabase.py to import race data to Supabase."""
+    print("Importando dados de corridas para o Supabase...")
+    
+    try:
+        # Executar o script como um processo separado
+        result = subprocess.run(["python", "import_races_to_supabase.py"], check=True)
+        
+        if result.returncode == 0:
+            print("Importação concluída com sucesso.")
+        else:
+            print("Importação falhou.")
+    except subprocess.CalledProcessError as e:
+        print(f"Erro ao executar import_races_to_supabase.py: {str(e)}")
+    except FileNotFoundError:
+        print("Arquivo import_races_to_supabase.py não encontrado. Certifique-se de que está no diretório correto.")
+
+def process_data(args):
+    """Process collected raw data using individual processors."""
+    meeting_key = args.race
+    session_key = args.session
+    specified_topics = args.topics
+    
+    print(f"Processando dados para {meeting_key}/{session_key}...")
+    
+    # Detectar tópicos disponíveis
+    available_topics = detect_available_topics(meeting_key, session_key)
+    
+    if not available_topics:
+        print("Nenhum dado bruto encontrado para esta corrida/sessão.")
+        print("Execute primeiro a coleta de dados:")
+        print("python main.py collect --meeting [MEETING_KEY] --session [SESSION_KEY]")
+        return
+    
+    print(f"Tópicos disponíveis: {', '.join(available_topics)}")
+    
+    # Determinar quais tópicos processar
+    topics_to_process = specified_topics if specified_topics else available_topics
+    
+    # Filtrar apenas tópicos que estão disponíveis
+    topics_to_process = [topic for topic in topics_to_process if topic in available_topics]
+    
+    if not topics_to_process:
+        print("Nenhum dos tópicos especificados está disponível.")
+        return
+    
+    # Processar cada tópico
+    for topic in topics_to_process:
+        print(f"\nProcessando tópico: {topic}")
+        
+        if topic in PROCESSOR_MAP:
+            processor_class = PROCESSOR_MAP[topic]
+            print(f"Usando processador: {processor_class.__name__}")
+            
+            result = run_processor(processor_class, meeting_key, session_key)
+            
+            if result:
+                print(f"Processamento de {topic} concluído com sucesso.")
+            else:
+                print(f"Processamento de {topic} falhou.")
+        else:
+            print(f"Não há processador disponível para o tópico: {topic}")
+    
+    print("\nProcessamento de dados concluído.")
+    print(f"Os dados processados estão em: {config.PROCESSED_DATA_DIR / meeting_key / session_key}")
+def main():
     """Main entry point for the application"""
     args = parse_arguments()
+    
     if args.command == "explore":
-       run_explore(args)
-
+        run_f1_explorer()
     elif args.command == "collect":
-      await run_collect(args)
-
-    if args.command == "collect":
-        await run_collect(args)
-        
+        run_f1_collector(args)
     elif args.command == "process":
-        run_process(args)
-    elif args.command == "visualize":
-        run_visualize(args)
-    elif args.command == "pipeline":
-        await run_pipeline(args)
+        process_data(args)
+    elif args.command == "import":
+        run_import_to_supabase()
     else:
-        print("Please specify a command: collect, process, visualize, or pipeline")
+        print("Por favor, especifique um comando: explore, collect, process ou import")
         sys.exit(1)
 
-
 if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+    main()

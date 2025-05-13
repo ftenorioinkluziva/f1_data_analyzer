@@ -1,27 +1,225 @@
 """
-Processor for DriverList streams from F1 races.
+Processador de DriverList modificado para relacionar corretamente com Sessions
 """
 import pandas as pd
 import json
 import matplotlib.pyplot as plt
+import os
+from dotenv import load_dotenv
+from supabase import create_client, Client
 from pathlib import Path
 import re
 from datetime import datetime
 import numpy as np
+import time
 
 from src.processors.base_processor import BaseProcessor
 from src.utils.file_utils import ensure_directory
 
+# Carregar variáveis de ambiente
+load_dotenv()
+
+# Configuração do Supabase
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
 class DriverListProcessor(BaseProcessor):
     """
     Process DriverList streams to extract driver information and position changes during F1 sessions.
+    Also stores data in the database for future analysis.
     """
     
     def __init__(self):
         """Initialize the DriverList processor."""
         super().__init__()
         self.topic_name = "DriverList"
+        self.supabase = self._init_supabase()
+    
+    def _init_supabase(self):
+        """Initialize Supabase client."""
+        if not SUPABASE_URL or not SUPABASE_KEY:
+            print("AVISO: SUPABASE_URL e SUPABASE_KEY não estão configurados. Os dados não serão salvos no banco.")
+            return None
+            
+        try:
+            return create_client(SUPABASE_URL, SUPABASE_KEY)
+        except Exception as e:
+            print(f"Erro ao inicializar o cliente Supabase: {str(e)}")
+            return None
+    
+    def get_session_id(self, race_name, session_name):
+        """
+        Get the session ID from the database based on race name and session name.
+        
+        Args:
+            race_name: Name of the race
+            session_name: Name of the session
+            
+        Returns:
+            int: Session ID or None if not found
+        """
+        if not self.supabase:
+            return None
+            
+        try:
+            # Primeiro, encontrar a corrida pelo nome
+            race_query = self.supabase.table("races").select("id").ilike("name", f"%{race_name}%")
+            race_result = race_query.execute()
+            
+            if not race_result.data:
+                print(f"Corrida não encontrada: {race_name}")
+                return None
+                
+            race_id = race_result.data[0]["id"]
+            
+            # Agora, encontrar a sessão para esta corrida
+            session_query = self.supabase.table("sessions").select("id").eq("race_id", race_id).ilike("name", f"%{session_name}%")
+            session_result = session_query.execute()
+            
+            if not session_result.data:
+                print(f"Sessão não encontrada: {session_name} para corrida {race_name}")
+                return None
+                
+            return session_result.data[0]["id"]
+            
+        except Exception as e:
+            print(f"Erro ao buscar ID da sessão: {str(e)}")
+            return None
+    
+    def save_drivers_to_database(self, drivers_df, session_id):
+        """
+        Save the driver information to the database and create session-driver relationships.
+        
+        Args:
+            drivers_df: DataFrame containing driver information
+            session_id: ID of the session in the database
+            
+        Returns:
+            dict: Dictionary with driver_number: driver_id mapping
+        """
+        if not self.supabase or session_id is None:
+            return {}
+            
+        try:
+            # Dicionário para mapear driver_number para driver_id para uso posterior
+            driver_id_map = {}
+            
+            # Processar cada piloto
+            for _, driver in drivers_df.iterrows():
+                # Verificar se o piloto já existe
+                driver_query = self.supabase.table("drivers").select("id").eq("driver_number", driver['driver_number']).execute()
+                
+                driver_record = {
+                    "driver_number": driver['driver_number'],
+                    "racing_number": driver.get('racing_number'),
+                    "full_name": driver.get('full_name', ''),
+                    "broadcast_name": driver.get('broadcast_name'),
+                    "tla": driver.get('tla'),
+                    "team_name": driver.get('team_name'),
+                    "team_color": driver.get('team_color'),
+                    "first_name": driver.get('first_name'),
+                    "last_name": driver.get('last_name'),
+                    "reference": driver.get('reference'),
+                    "headshot_url": driver.get('headshot_url')
+                }
+                
+                driver_id = None
+                
+                if not driver_query.data:
+                    # Inserir novo piloto
+                    insert_result = self.supabase.table("drivers").insert(driver_record).execute()
+                    driver_id = insert_result.data[0]["id"]
+                    print(f"Piloto inserido: {driver.get('full_name')} (#{driver['driver_number']}), ID: {driver_id}")
+                else:
+                    # Atualizar piloto existente
+                    driver_id = driver_query.data[0]["id"]
+                    self.supabase.table("drivers").update(driver_record).eq("id", driver_id).execute()
+                    print(f"Piloto atualizado: {driver.get('full_name')} (#{driver['driver_number']}), ID: {driver_id}")
+                
+                # Armazenar o ID do piloto no mapeamento
+                driver_id_map[driver['driver_number']] = driver_id
+                
+                # Criar/atualizar relação entre piloto e sessão
+                session_driver_query = self.supabase.table("session_drivers").select("id").eq("session_id", session_id).eq("driver_id", driver_id).execute()
+                
+                session_driver_record = {
+                    "session_id": session_id,
+                    "driver_id": driver_id,
+                    "initial_position": driver.get('initial_position')
+                }
+                
+                if not session_driver_query.data:
+                    # Inserir nova relação
+                    self.supabase.table("session_drivers").insert(session_driver_record).execute()
+                    print(f"Relação sessão-piloto inserida para piloto ID: {driver_id}")
+                else:
+                    # Atualizar relação existente
+                    session_driver_id = session_driver_query.data[0]["id"]
+                    self.supabase.table("session_drivers").update(session_driver_record).eq("id", session_driver_id).execute()
+                    print(f"Relação sessão-piloto atualizada para piloto ID: {driver_id}")
+            
+            print(f"Informações de {len(driver_id_map)} pilotos salvas/atualizadas no banco de dados.")
+            return driver_id_map
+            
+        except Exception as e:
+            print(f"Erro ao salvar pilotos no banco: {str(e)}")
+            return {}
+    
+    def save_positions_to_database(self, positions_df, session_id, driver_id_map):
+        """
+        Save the driver positions to the database.
+        
+        Args:
+            positions_df: DataFrame containing position updates
+            session_id: ID of the session in the database
+            driver_id_map: Dictionary mapping driver_number to driver_id
+            
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        if not self.supabase or session_id is None or not driver_id_map:
+            return False
+            
+        try:
+            # Preparar dados para inserção
+            position_records = []
+            
+            for _, row in positions_df.iterrows():
+                driver_number = row['driver_number']
+                
+                # Verificar se temos o driver_id para este driver_number
+                if driver_number not in driver_id_map:
+                    print(f"Aviso: driver_id não encontrado para driver_number {driver_number}. Pulando registro de posição.")
+                    continue
+                
+                driver_id = driver_id_map[driver_number]
+                
+                position_record = {
+                    "session_id": session_id,
+                    "driver_id": driver_id,
+                    "timestamp": row['timestamp'],
+                    "position": row['position']
+                }
+                
+                position_records.append(position_record)
+            
+            # Inserir em lotes para evitar problemas com tamanho da requisição
+            batch_size = 100
+            total_records = len(position_records)
+            
+            for i in range(0, total_records, batch_size):
+                batch = position_records[i:i + batch_size]
+                self.supabase.table("driver_positions").insert(batch).execute()
+                print(f"Inseridos registros de posição {i} a {min(i + batch_size, total_records)} de {total_records}")
+                # Pausa pequena para evitar sobrecarga da API
+                time.sleep(0.5)
+            
+            print(f"Todos os {total_records} registros de posição foram salvos no banco de dados.")
+            return True
+            
+        except Exception as e:
+            print(f"Erro ao salvar posições no banco: {str(e)}")
+            return False
     
     def extract_driver_info(self, timestamped_data):
         """
@@ -385,4 +583,57 @@ class DriverListProcessor(BaseProcessor):
             
             results["visualizations"] = viz_paths
         
+        # Salvar no banco de dados
+        if self.supabase:
+            print("Preparando para salvar dados de pilotos no banco...")
+            session_id = self.get_session_id(race_name, session_name)
+            
+            if session_id:
+                print(f"ID da sessão: {session_id}")
+                
+                # 1. Salvar informações dos pilotos e obter o mapeamento driver_number -> driver_id
+                driver_id_map = self.save_drivers_to_database(driver_info_df, session_id)
+                results["database_save_drivers"] = bool(driver_id_map)
+                
+                # 2. Salvar atualizações de posição se disponíveis
+                if positions_df is not None and not positions_df.empty and driver_id_map:
+                    print("Preparando para salvar atualizações de posição no banco...")
+                    
+                    # Reduzir a quantidade de dados se necessário
+                    # Para análise de posição, geralmente é suficiente ter pontos a cada 10-15 segundos
+                    if len(positions_df) > 500:
+                        # Amostrar aproximadamente 1 ponto a cada 10-15 segundos
+                        sample_size = max(len(positions_df) // 500, 1)
+                        positions_sample = positions_df.iloc[::sample_size].copy()
+                        print(f"Reduzindo de {len(positions_df)} para {len(positions_sample)} registros de posição para banco de dados")
+                    else:
+                        positions_sample = positions_df
+                    
+                    db_success_positions = self.save_positions_to_database(positions_sample, session_id, driver_id_map)
+                    results["database_save_positions"] = db_success_positions
+                else:
+                    print("Não foi possível salvar as posições no banco.")
+                    results["database_save_positions"] = False
+            else:
+                print("Não foi possível obter o ID da sessão. Os dados não serão salvos no banco.")
+                results["database_save"] = False
+        else:
+            print("Cliente Supabase não inicializado. Os dados não serão salvos no banco.")
+            results["database_save"] = False
+        
         return results
+
+if __name__ == "__main__":
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Process DriverList data from F1 sessions")
+    parser.add_argument("--race", required=True, help="Race name")
+    parser.add_argument("--session", required=True, help="Session name")
+    
+    args = parser.parse_args()
+    
+    processor = DriverListProcessor()
+    results = processor.process(args.race, args.session)
+    
+    print("\nProcessamento concluído!")
+    print(f"Resultados: {results}")

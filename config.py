@@ -11,11 +11,10 @@ PROJECT_ROOT = Path(__file__).parent
 DATA_DIR = PROJECT_ROOT / "f1_data"
 RAW_DATA_DIR = DATA_DIR / "raw"
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
-ANALYSIS_DIR = DATA_DIR / "analysis"
-REPORTS_DIR = PROJECT_ROOT / "reports"
+
 
 # Ensure directories exist
-for directory in [DATA_DIR, RAW_DATA_DIR, PROCESSED_DATA_DIR, ANALYSIS_DIR, REPORTS_DIR]:
+for directory in [DATA_DIR, RAW_DATA_DIR, PROCESSED_DATA_DIR,]:
     directory.mkdir(exist_ok=True, parents=True)
 
 # Important data topics to collect

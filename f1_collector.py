@@ -1,4 +1,4 @@
-# f1_collector.py - versão modificada para coletar apenas dados brutos
+# f1_collector.py - versão modificada para coletar dados brutos usando as chaves como nomes de pastas
 import asyncio
 import json
 import aiohttp
@@ -62,12 +62,12 @@ async def get_session_topics(session, session_url):
     
     return topics
 
-# Função para baixar dados brutos de um tópico
-async def download_raw_data(http_session, session_url, topic, race_name, session_name):
+# Função para baixar dados brutos de um tópico usando as chaves como nomes de pastas
+async def download_raw_data(http_session, session_url, topic, meeting_key, session_key):
     print(f"Baixando tópico: {topic}")
     
-    # Criar diretório para os dados brutos
-    raw_topic_dir = RAW_DIR / race_name / session_name
+    # Criar diretório para os dados brutos usando as chaves como nomes
+    raw_topic_dir = RAW_DIR / str(meeting_key) / str(session_key)
     raw_topic_dir.mkdir(exist_ok=True, parents=True)
     
     # Arquivo para os dados brutos
@@ -93,6 +93,21 @@ async def download_raw_data(http_session, session_url, topic, race_name, session
     
     file_size = len(content)
     print(f"  Dados brutos salvos em {raw_file} ({file_size/1024:.1f} KB)")
+    
+    # Criar um arquivo de metadados para facilitar a referência futura
+    metadata = {
+        "url": topic_url,
+        "meeting_key": meeting_key,
+        "session_key": session_key,
+        "topic": topic,
+        "collected_at": datetime.now().isoformat()
+    }
+    
+    # Salvar metadados
+    metadata_file = raw_topic_dir / f"{topic}_metadata.json"
+    with open(metadata_file, "w") as f:
+        json.dump(metadata, f, indent=2)
+    
     return raw_file
 
 # Função para processar uma sessão específica
@@ -101,7 +116,7 @@ async def process_session(year, race_path, session_name, meeting_key, session_ke
     session_url = f"{base_url}/{year}/{race_path}/{session_name}"
     
     race_name = race_path.split('_', 1)[1] if '_' in race_path else race_path
-    print(f"\nProcessando sessão: {race_name}/{session_name}")
+    print(f"\nProcessando sessão: {race_name}/{session_name} (Meeting Key: {meeting_key}, Session Key: {session_key})")
     
     # Criar uma sessão HTTP para reutilizar conexões
     async with aiohttp.ClientSession() as session:
@@ -124,7 +139,7 @@ async def process_session(year, race_path, session_name, meeting_key, session_ke
         
         async def download_with_limit(topic):
             async with semaphore:
-                return await download_raw_data(session, session_url, topic, race_name, session_name)
+                return await download_raw_data(session, session_url, topic, meeting_key, session_key)
                 
         # Criar tarefas para todos os tópicos
         tasks = [download_with_limit(topic) for topic in topics]
@@ -259,8 +274,8 @@ async def main(meeting_key=None, session_key=None, list_all=False):
         year = "2024"
         race_path = "2024-05-05_Miami_Grand_Prix"
         session_names = ["2024-05-03_Practice_1", "2024-05-04_Qualifying", "2024-05-05_Race"]
-        meeting_key = 1234  # Exemplo
-        session_keys = [10023, 10029, 10033]  # Exemplo
+        meeting_key = 1264  # Exemplo - usando valor real para Miami GP 2024
+        session_keys = [1295, 1296, 1297]  # Exemplo - usando valores reais para as sessões
         
         # Processar todas as sessões padrão
         for session_name, session_key in zip(session_names, session_keys):
@@ -268,6 +283,7 @@ async def main(meeting_key=None, session_key=None, list_all=False):
         
         print("\nColeta concluída!")
         print(f"Dados brutos salvos em: {RAW_DIR.absolute()}")
+        print(f"Os dados estão organizados por: {RAW_DIR.absolute()}/[meeting_key]/[session_key]/")
         print("\nTodos os dados brutos foram salvos com sucesso. Você pode processá-los usando suas ferramentas preferidas.")
         return
     
@@ -277,6 +293,7 @@ async def main(meeting_key=None, session_key=None, list_all=False):
     
     print("\nColeta concluída!")
     print(f"Dados brutos salvos em: {RAW_DIR.absolute()}")
+    print(f"Os dados estão organizados por: {RAW_DIR.absolute()}/{meeting_key}/{session_key}/")
     print("\nTodos os dados brutos foram salvos com sucesso. Você pode processá-los usando suas ferramentas preferidas.")
 
 if __name__ == "__main__":
