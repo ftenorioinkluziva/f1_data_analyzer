@@ -30,3 +30,13 @@ Thumbs.db
 # Arquivos temporários
 *.tmp
 *.log
+
+# Ignorar todos os diretórios __pycache__ em qualquer nível do projeto
+__pycache__/
+*/__pycache__/
+**/__pycache__/
+
+# Ignorar todos os arquivos compilados Python
+*.py[cod]
+*$py.class
+*.so
