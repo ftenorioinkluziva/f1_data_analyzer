@@ -1,0 +1,32 @@
+# Ignorar diretórios de dados
+f1_data/
+f1_data_explorer/
+
+# Ignorar diretórios de dados processados
+f1_data/processed/
+f1_data/raw/
+
+# Ignorar arquivos de configuração local com credenciais
+.env
+
+# Ignorar caches Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignorar ambiente virtual
+venv/
+.venv/
+env/
+
+# Ignorar arquivos de configuração IDEs
+.vscode/
+.idea/
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos temporários
+*.tmp
+*.log
