@@ -33,7 +33,7 @@ def explore_f1_years():
     output_dir.mkdir(exist_ok=True)
     
     # Vamos verificar anos: 2025, 2024, 2023, 2022
-    years_to_check = [2025, 2024, 2023, 2022]
+    years_to_check = [2025]
     found_years = []
     
     print("Procurando índices de anos disponíveis...\n")
